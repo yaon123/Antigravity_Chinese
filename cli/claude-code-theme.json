@@ -1,0 +1,23 @@
+{
+  "name": "Claude Code Warm Dark",
+  "background": "#18181B",
+  "foreground": "#EDEAE5",
+  "cursorColor": "#D97757",
+  "selectionBackground": "#3E2723",
+  "black": "#18181B",
+  "red": "#D46258",
+  "green": "#78A987",
+  "yellow": "#E09F3E",
+  "blue": "#6495ED",
+  "purple": "#B48EAD",
+  "cyan": "#88C0D0",
+  "white": "#EDEAE5",
+  "brightBlack": "#322F2B",
+  "brightRed": "#E07A5F",
+  "brightGreen": "#98C379",
+  "brightYellow": "#F4A261",
+  "brightBlue": "#7AA2F7",
+  "brightPurple": "#C678DD",
+  "brightCyan": "#7DCFFF",
+  "brightWhite": "#FFFFFF"
+}

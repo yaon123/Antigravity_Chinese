@@ -1,0 +1,23 @@
+# 调试与临时排查工具（开发期 CDP 探针与截图等）
+.diag/
+.build/
+scripts/_*
+*.log
+*.png
+
+# 操作系统与编辑器生成文件
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node.js / Python 缓存
+node_modules/
+__pycache__/
+*.pyc
+
+# 核心二进制与备份（严禁提交大文件二进制与备份）
+*.asar*
+!app.asar.example
+*.zip
+dist/

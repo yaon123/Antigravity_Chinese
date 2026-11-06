@@ -1,0 +1,9 @@
+{
+  "theme": "claude-code-dark",
+  "language": "zh-CN",
+  "promptSymbol": "❯",
+  "accentColor": "#D97757",
+  "enableBoxBorders": true,
+  "diffStyle": "side-by-side-warm",
+  "tokenMeter": true
+}

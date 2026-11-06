@@ -1,0 +1,448 @@
+/**
+ * ============================================================
+ *  Antigravity × Claude Code 暖暗色皮肤（v3 · 令牌优先重构）
+ * ============================================================
+ *  设计依据：.diag 真实抓取证据
+ *    - EVIDENCE-tokens.txt  241 个真实生效的自定义属性
+ *    - EVIDENCE-classes.txt 真实 agy-* 组件类名 / data-testid
+ *    - tokens.json          App 令牌的声明来源（:root / body 级主题块）
+ *
+ *  注入方式：主进程 contents.insertCSS()，本文件追加在页面样式表末尾。
+ *  Tailwind v4 的 utilities 位于 @layer 中，本文件是非分层规则，天然优先；
+ *  语义令牌再追加 !important 兜底，防止被 App 的 body 级主题块二次覆盖。
+ *
+ *  调色板（Claude Code Warm Dark）
+ *    底 #18181B · 外壳 #141312 · 侧栏/次级面 #1F1E1D
+ *    卡片/气泡 #22201E · 代码块 #141312 · 浮层玻璃 #1A1917
+ *    主文字 #EDEAE5 · 次文字 #9E9689 · 弱化 #827B70
+ *    主色/陶土橙 #D97757 · 悬停 #E28768 · 边框 #322F2B
+ * ============================================================
+ */
+
+/* ════════════════════════════════════════════════════════════
+   1. 令牌覆盖（最重要的一层）
+   App 的语义令牌主要定义在 :root；但字体（--font-sans）、
+   --nux-radius-*、语法高亮等定义在 body[data-agy-theme][data-newux-theme]
+   等 body 级主题块上，而 body 自带 dark / dark-theme / theme-dark 类。
+   因此这里同时覆盖 :root、html/body、body 级主题块与主要容器，
+   并用 !important 保证不被 App 再覆盖。
+   ════════════════════════════════════════════════════════════ */
+:root,
+html,
+body,
+body[data-agy-theme],
+body[data-agy-theme].dark,
+body[data-agy-theme][data-newux-theme],
+.dark,
+.theme-dark,
+.dark-theme,
+.agy-shell,
+.agy-sheet,
+.agy-dialog,
+.agy-overlay {
+  /* —— 1.1 基础面 —— */
+  --background: #18181b !important;
+  --color-background: #18181b !important;
+  --foreground: #edeae5 !important;
+  --color-foreground: #edeae5 !important;
+  --card: #22201e !important;
+  --color-card: #22201e !important;
+  --card-foreground: #edeae5 !important;
+  --card-border: #322f2b !important;
+  --color-card-border: #322f2b !important;
+  --popover: #22201e !important;
+  --popover-foreground: #edeae5 !important;
+  --secondary: #22201e !important;
+  --color-secondary: #22201e !important;
+  --secondary-foreground: #edeae5 !important;
+  --color-secondary-foreground: #edeae5 !important;
+  --muted: #262422 !important;
+  --color-muted: #262422 !important;
+  --muted-foreground: #9e9689 !important;
+  --color-muted-foreground: #9e9689 !important;
+  --accent: #2a2724 !important;
+  --accent-foreground: #edeae5 !important;
+  --border: #322f2b !important;
+  --color-border: #322f2b !important;
+  --input: #1f1e1d !important;
+  --ring: #d97757 !important;
+  --placeholder: #827b70 !important;
+  --color-placeholder: #827b70 !important;
+  --shell: #141312 !important;
+  --scrim: rgb(10 9 8 / 0.66) !important;
+  --color-overlay-default: color-mix(in srgb, #0b0a09 60%, transparent) !important;
+
+  /* —— 1.2 主色 / 链接 / 状态色 —— */
+  --primary: #d97757 !important;
+  --color-primary: #d97757 !important;
+  --primary-foreground: #ffffff !important;
+  --color-primary-foreground: #ffffff !important;
+  --cta: #d97757 !important;
+  --cta-foreground: #ffffff !important;
+  --link: #d97757 !important;
+  --color-link: #d97757 !important;
+  --error: #e06c60 !important;
+  --color-error: #e06c60 !important;
+  --destructive: #e06c60 !important;
+  --destructive-foreground: #ffffff !important;
+  --success: #8fb573 !important;
+  --color-success: #8fb573 !important;
+  --warning: #e0b15a !important;
+  --color-warning: #e0b15a !important;
+  --focus-ring-color: rgb(217 119 87 / 0.45) !important;
+  --focus-ring-offset-color: #18181b !important;
+  --nux-focus-ring: color-mix(in srgb, #d97757 55%, transparent) !important;
+
+  /* —— 1.3 侧栏 / 玻璃 / 浮层 —— */
+  --sidebar: #1f1e1d !important;
+  --color-sidebar: #1f1e1d !important;
+  --sidebar-foreground: #edeae5 !important;
+  --sidebar-muted: rgb(237 234 229 / 0.055) !important;
+  --color-sidebar-muted: rgb(237 234 229 / 0.055) !important;
+  --sidebar-secondary: rgb(237 234 229 / 0.09) !important;
+  --color-sidebar-secondary: rgb(237 234 229 / 0.09) !important;
+  --sidebar-border: #2a2724 !important;
+  --color-sidebar-border: #2a2724 !important;
+  --sidebar-primary: #d97757 !important;
+  --sidebar-primary-foreground: #ffffff !important;
+  --sidebar-accent: #2a2724 !important;
+  --sidebar-accent-foreground: #edeae5 !important;
+  --onyx-selected: color-mix(in srgb, #d97757 13%, #1f1e1d) !important;
+  --glass: #1a1917 !important;
+  --glass-border: rgb(237 234 229 / 0.1) !important;
+  --glass-highlight: rgb(237 234 229 / 0.06) !important;
+  --glass-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.6), 0 2px 8px -2px rgb(0 0 0 / 0.4) !important;
+  --nux-chip-shadow: 0 2px 6px -3px rgb(0 0 0 / 0.45), 0 1px 1px rgb(0 0 0 / 0.25) !important;
+
+  /* —— 1.4 代码 / 选区 / 编辑器 —— */
+  --code-foreground: color-mix(in oklab, #edeae5 72%, #d97757) !important;
+  --color-code: color-mix(in oklab, #edeae5 72%, #d97757) !important;
+  --selection-background: rgb(217 119 87 / 0.3) !important;
+  --color-selection-background: rgb(217 119 87 / 0.3) !important;
+  --bg-selection: rgb(217 119 87 / 0.3) !important;
+  --bg-selection-overlay: rgb(217 119 87 / 0.22) !important;
+  --editor-line-number-foreground: #827b70 !important;
+  --color-editorLineNumber-foreground: #827b70 !important;
+
+  /* —— 1.5 圆角：整体偏小，贴近 Claude Code 的硬朗感 —— */
+  --radius-xs: 0.125rem !important;
+  --radius-sm: 0.25rem !important;
+  --radius-md: 0.375rem !important;
+  --radius-lg: 0.5rem !important;
+  --radius-xl: 0.625rem !important;
+  --radius-2xl: 0.75rem !important;
+  --nux-radius-md: 8px !important;
+  --nux-radius-lg: 10px !important;
+  --nux-radius-xl: 12px !important;
+  --nux-radius-2xl: 16px !important;
+  --nux-composer-radius: 12px !important;
+  --nux-composer-frame-radius: 13px !important;
+
+  /* —— 1.6 字体：Inter 优先，中文回退到苹方 / 微软雅黑 —— */
+  --font-sans: "Inter", "Inter Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif !important;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", "Google Sans Code", Consolas, "Courier New", monospace !important;
+  --default-font-family: "Inter", "Inter Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif !important;
+  --default-mono-font-family: "JetBrains Mono", "Cascadia Code", "Fira Code", "Google Sans Code", Consolas, "Courier New", monospace !important;
+
+  /* —— 1.7 对话阅读宽度 —— */
+  --max-conversation-width: 52rem !important;
+
+  /* —— 1.8 语法高亮：App 的 markdown 高亮真实消费 --syntax-* —— */
+  --syntax-default-fg: #edeae5 !important;
+  --syntax-comment: #827b70 !important;
+  --syntax-punctuation: #9e9689 !important;
+  --syntax-property: #e2b87a !important;
+  --syntax-deleted: #e07a6a !important;
+  --syntax-inserted: #8fb573 !important;
+  --syntax-tag: #d97757 !important;
+  --syntax-constant: #d9a05b !important;
+  --syntax-number: #d9a05b !important;
+  --syntax-string: #a8b87a !important;
+  --syntax-attr-name: #c9b98a !important;
+  --syntax-builtin: #d9a05b !important;
+  --syntax-operator: #c9b98a !important;
+  --syntax-variable: #edeae5 !important;
+  --syntax-attr-value: #a8b87a !important;
+  --syntax-keyword: #d97757 !important;
+  --syntax-function: #e2b87a !important;
+  --syntax-class-name: #e2c08d !important;
+  --syntax-regex: #d9a05b !important;
+
+  /* —— 1.9 react-tooltip 提示气泡令牌 —— */
+  --rt-color-dark: #22201e !important;
+  --rt-color-white: #edeae5 !important;
+  --rt-opacity: 0.98 !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   2. 全局基础排版与选区
+   ════════════════════════════════════════════════════════════ */
+html,
+body {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans) !important;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  accent-color: var(--primary);
+}
+
+::selection {
+  background-color: rgb(217 119 87 / 0.3);
+  color: var(--foreground);
+}
+
+::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   3. 外壳 / 标题栏 / 侧栏容器（真实 agy-* 与 data-testid 钩子）
+   ════════════════════════════════════════════════════════════ */
+.agy-shell,
+.agy-sheet {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans);
+}
+
+[data-testid="title-menu-bar"] {
+  background-color: var(--sidebar) !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+[data-testid="title-menu-bar-item"] {
+  font-size: 0.8125rem;
+  letter-spacing: -0.005em;
+}
+
+[role="navigation"],
+[data-testid="settings-sidebar"] {
+  background-color: var(--sidebar) !important;
+  color: var(--foreground);
+}
+
+/* ════════════════════════════════════════════════════════════
+   4. 分栏拖拽条（data-split-sash / data-testid="sidebar-sash" 真实存在）
+   ════════════════════════════════════════════════════════════ */
+[data-split-sash] {
+  background-color: var(--border) !important;
+  transition: background-color 120ms ease;
+}
+
+[data-split-sash]:hover {
+  background-color: var(--primary) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   5. 侧栏条目与行内操作
+   选中态由 App 的 --row-bg 变量绘制，这里直接接管该变量。
+   ════════════════════════════════════════════════════════════ */
+.agy-sidebar-row {
+  color: var(--muted-foreground);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.agy-sidebar-row:hover {
+  color: var(--foreground);
+}
+
+/* 选中行：App 用 data-selected="true" 标记，背景由 --onyx-selected / --row-bg 绘制；
+   这里用 !important 直接接管背景色（App 的 --row-bg 是 important，但背景色不是）。 */
+.agy-sidebar-row[data-selected="true"] {
+  background-color: color-mix(in srgb, var(--primary) 13%, var(--sidebar)) !important;
+  color: var(--foreground) !important;
+}
+
+.agy-row-actions {
+  color: var(--muted-foreground);
+}
+
+.agy-sidebar-row:hover .agy-row-actions,
+.agy-sidebar-row[data-selected="true"] .agy-row-actions {
+  color: var(--foreground);
+}
+
+/* ════════════════════════════════════════════════════════════
+   6. 新建对话按钮（陶土橙悬停）
+   ════════════════════════════════════════════════════════════ */
+[data-testid="app-icon-new-conversation-button"] {
+  color: var(--foreground) !important;
+  border-radius: var(--radius-md);
+  transition: color 120ms ease;
+}
+
+[data-testid="app-icon-new-conversation-button"]:hover {
+  color: var(--primary) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   7. 浮层菜单 / 设置弹窗（真实 agy-overlay / agy-dialog 钩子）
+   ════════════════════════════════════════════════════════════ */
+.agy-overlay {
+  border-color: var(--border) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+.agy-overlay-item[data-selected],
+.agy-overlay-item[aria-selected="true"] {
+  background-color: color-mix(in srgb, var(--primary) 14%, transparent) !important;
+  color: var(--foreground) !important;
+}
+
+.settings-modal-backdrop {
+  background-color: rgb(10 9 8 / 0.66) !important;
+}
+
+.settings-modal-container {
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 24px 64px -20px rgb(0 0 0 / 0.72) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   8. 输入区 @ 提及胶囊（真实 context-scope-mention 类）
+   ════════════════════════════════════════════════════════════ */
+.context-scope-mention {
+  background-color: color-mix(in srgb, var(--primary) 16%, transparent) !important;
+  color: color-mix(in oklab, var(--primary) 72%, var(--foreground)) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   9. 代码块 / 行内代码 / Markdown 提示块
+   语法着色走 1.8 的 --syntax-* 令牌；这里负责容器外观。
+   ════════════════════════════════════════════════════════════ */
+pre {
+  background-color: #141312 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--foreground);
+}
+
+pre code {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: inherit !important;
+  padding: 0 !important;
+}
+
+code:not(pre code) {
+  background-color: #262421 !important;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--code-foreground) !important;
+  padding: 0.1em 0.35em !important;
+}
+
+/* App 的 markdown 提示块使用 GitHub 风格的 --color-*-fg 令牌，改成暖色 */
+.markdown-alert {
+  border-radius: var(--radius-md);
+  --color-border-border: #322f2b !important;
+  --color-accent-fg: #d97757 !important;
+  --color-accent-emphasis: #d97757 !important;
+  --color-danger-fg: #e06c60 !important;
+  --color-danger-emphasis: #c9635a !important;
+  --color-attention-fg: #e0b15a !important;
+  --color-attention-emphasis: #b8913f !important;
+  --color-done-fg: #c9a87c !important;
+  --color-done-emphasis: #a98a63 !important;
+  --color-success-fg: #8fb573 !important;
+  --color-success-emphasis: #6e9455 !important;
+}
+
+.review-button {
+  color: var(--primary) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   10. 滚动条美化（原生 + App 自绘浮层滚动条）
+   ════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3b3731;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #4a453d;
+}
+
+/* App 自绘浮层滚动条：悬停/拖拽时染成陶土橙 */
+[data-testid="overlay-scrollbar-thumb"] {
+  background-color: rgb(237 234 229 / 0.16) !important;
+}
+
+[data-testid="overlay-scrollbar"]:hover [data-testid="overlay-scrollbar-thumb"],
+[data-testid="overlay-scrollbar"][data-hovered="true"] [data-testid="overlay-scrollbar-thumb"] {
+  background-color: rgb(217 119 87 / 0.55) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   11. onyx 图层令牌（输入作曲区 / 切换组专用）
+   踩坑记录：App 的「onyx」主题把这几层颜色放在 body 的 inline style 上，
+   而 .surface-composer 之类用的是 var(--onyx-*, 兜底值)，
+   只覆盖 :root 语义令牌时输入框仍然是原来的冷灰。
+   本节补齐这组图层令牌，让作曲区跟随 Claude 暖色。
+   ════════════════════════════════════════════════════════════ */
+:root,
+html,
+body,
+body[data-agy-theme],
+body[data-agy-theme][data-newux-theme],
+body[data-agy-theme][data-newux-theme="onyx"],
+.dark,
+.theme-dark {
+  /* 作曲区外框（原本是 #0D0D11 冷黑） */
+  --onyx-frame: #322f2b !important;
+  /* 作曲区卡片（原本是 #15151A） */
+  --onyx-raised: #22201e !important;
+  /* 切换组凹槽 / 选中键 */
+  --onyx-well: #1f1e1d !important;
+  --onyx-key: #322f2b !important;
+  --onyx-selected: color-mix(in srgb, #d97757 16%, #1f1e1d) !important;
+  /* 选中行底色令牌（App 侧唯一带 !important 的令牌，直接接管） */
+  --row-bg: color-mix(in srgb, #d97757 16%, #1f1e1d) !important;
+}
+
+/* 作曲区外层描边与光晕改成暖色弱对比 */
+body[data-agy-theme][data-newux-theme="onyx"].dark .surface-composer {
+  box-shadow:
+    inset 0 1px 2px rgb(0 0 0 / 0.3),
+    0 0 0 4px #18181b,
+    0 0 0 5px rgb(237 234 229 / 0.06),
+    0 18px 40px -12px rgb(0 0 0 / 0.5),
+    0 2px 8px -2px rgb(0 0 0 / 0.3) !important;
+}
+
+body[data-agy-theme][data-newux-theme="onyx"].dark .surface-composer > .surface-composer-card {
+  box-shadow:
+    rgb(237 234 229 / 0.06) 0 1px 0 inset,
+    rgb(237 234 229 / 0.07) 0 0 0 1px,
+    rgb(0 0 0 / 0.35) 0 3px 10px -2px !important;
+}
+
+/* 作曲区右侧那颗「实心前景色」胶囊按钮：改成陶土橙，贴近 Claude Code 的发送键 */
+[data-testid="voice-live-pill"] {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+/* 设置面板 / 弹窗：抬升一层的暖色表面，而不是纯底色 */
+.settings-modal-container,
+.agy-dialog {
+  background-color: #1f1e1d !important;
+  border: 1px solid #322f2b !important;
+}
+
