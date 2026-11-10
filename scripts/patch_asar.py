@@ -547,6 +547,8 @@ def cmd_verify(resources):
             log("%s : 解析失败 %s" % (label, exc))
             ok = False
             continue
+        if path == asar and not s["has_hook"]:
+            ok = False
         log("%s : %.2f MB / %d 条目 / %d unpacked / 钩子=%s"
             % (label, s["size"] / 1048576, s["entries"], len(s["unpacked"]),
                "有" if s["has_hook"] else "无"))
