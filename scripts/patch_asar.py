@@ -474,7 +474,21 @@ def cmd_install(resources, project):
         log("=== 6/6 替换安装目录中的 app.asar ===")
         staging = resources / (ASAR_NAME + ".new")
         shutil.copy2(new_asar, staging)
-        os.replace(staging, asar)
+        try:
+            os.replace(staging, asar)
+        except OSError:
+            # 在 Windows 上，若客户端正被打开，os.replace 会触发 WinError 5（禁止删除）。
+            # 此时使用就地流式覆写（in-place write）可直接成功穿透写入运行中文件的句柄。
+            with open(new_asar, "rb") as f_src:
+                with open(asar, "r+b") as f_dst:
+                    f_dst.seek(0)
+                    shutil.copyfileobj(f_src, f_dst)
+                    f_dst.truncate()
+        if staging.exists():
+            try:
+                staging.unlink()
+            except Exception:
+                pass
         # 同步 unpacked 目录（只增不删，保证 header 指向的文件都在盘上）
         new_unpacked = tmpdir / "app.asar.unpacked"
         if new_unpacked.exists():
@@ -515,7 +529,19 @@ def cmd_restore(resources):
 
     staging = resources / (ASAR_NAME + ".restore")
     shutil.copy2(backup, staging)
-    os.replace(staging, asar)
+    try:
+        os.replace(staging, asar)
+    except OSError:
+        with open(backup, "rb") as f_src:
+            with open(asar, "r+b") as f_dst:
+                f_dst.seek(0)
+                shutil.copyfileobj(f_src, f_dst)
+                f_dst.truncate()
+    if staging.exists():
+        try:
+            staging.unlink()
+        except Exception:
+            pass
     after = asar_summary(asar)
     if after["has_hook"]:
         return fail("还原后仍检测到钩子，请重新安装客户端。")
