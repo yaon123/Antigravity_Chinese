@@ -110,7 +110,14 @@ try {
     try {
       if (!_contents || _SKIP_TYPES.has(_contents.getType())) return;
       // 只在 dom-ready 注入一次：此时 body 已就绪，样式不会闪
-      _contents.on('dom-ready', () => { void _apply(_contents); });
+      _contents.on('dom-ready', () => {
+        // 关键安全校验：只对本地客户端 Hub UI 注入（例如 https://127.0.0.1:<port>/ 或 file://），绝对不污染外部网页！
+        const _url = _contents.getURL() || '';
+        if (_url && !_url.startsWith('https://127.0.0.1:') && !_url.startsWith('http://127.0.0.1:') && !_url.startsWith('file://')) {
+          return;
+        }
+        void _apply(_contents);
+      });
     } catch (e) {
       console.warn(_tag, '钩子挂载失败:', e && e.message);
     }
@@ -397,18 +404,25 @@ def cmd_install(resources, project):
         return fail(running_hint())
 
     log("=== 1/6 备份官方原版 ===")
-    if not backup.exists():
+    try:
+        current_summary = asar_summary(asar)
+    except Exception as exc:  # noqa: BLE001
+        return fail("当前 app.asar 文件损坏或不可解析：%s" % exc)
+
+    if not current_summary["has_hook"]:
+        # 当前 asar 是纯净官方版本（初次安装或官方版本刚更新），始终更新备份为当前最新版本
+        shutil.copy2(asar, backup)
+        log("  已同步最新官方原版备份 -> %s" % backup)
+    elif not backup.exists():
         shutil.copy2(asar, backup)
         log("  已备份 -> %s" % backup)
     else:
-        log("  备份已存在 -> %s" % backup)
-    try:
-        old = asar_summary(backup)
-    except Exception as exc:  # noqa: BLE001
-        return fail("备份文件不可解析，已中止：%s" % exc)
+        log("  使用已有备份 -> %s" % backup)
+
+    old = current_summary
     if old["has_hook"]:
-        log("  [警告] 备份里已经含有钩子，说明它不是纯净原版；还原功能将不可靠。")
-    log("  原版: %.2f MB / %d 个条目 / %d 个 unpacked"
+        log("  [提示] 当前 app.asar 已包含旧版钩子，将进行平滑重写更新。")
+    log("  目标: %.2f MB / %d 个条目 / %d 个 unpacked"
         % (old["size"] / 1048576, old["entries"], len(old["unpacked"])))
     # asar extract 会从同级的 app.asar.unpacked 里读取那些标记为 unpacked 的
     # 文件；目录缺失会导致解包内容不完整，必须先拦住。

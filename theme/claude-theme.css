@@ -45,6 +45,27 @@ body[data-agy-theme][data-newux-theme],
   --color-background: #18181b !important;
   --foreground: #edeae5 !important;
   --color-foreground: #edeae5 !important;
+  --content: #18181b !important;
+  --color-content: #18181b !important;
+  --shell-canvas: #141312 !important;
+  --editor-code-block-background: #141312 !important;
+  --home-glow: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+
+  /* Diff 视图高光暖色化 (柔和低饱和暖绿/暖红) */
+  --editor-diff-inserted-line-background: rgba(120, 169, 135, 0.15) !important;
+  --editor-diff-removed-line-background: rgba(212, 98, 88, 0.15) !important;
+  --editor-diff-inserted-text-background: rgba(120, 169, 135, 0.28) !important;
+  --editor-diff-removed-text-background: rgba(212, 98, 88, 0.28) !important;
+  --color-diffEditor-insertedLineBackground: rgba(120, 169, 135, 0.15) !important;
+  --color-diffEditor-removedLineBackground: rgba(212, 98, 88, 0.15) !important;
+  --color-diffEditor-insertedTextBackground: rgba(120, 169, 135, 0.28) !important;
+  --color-diffEditor-removedTextBackground: rgba(212, 98, 88, 0.28) !important;
+
+  /* 编辑器选区与查找高光暖色化 (拒绝刺眼电光蓝) */
+  --editor-selection-background: rgba(217, 119, 87, 0.28) !important;
+  --editor-comment-selection-background: rgba(217, 119, 87, 0.2) !important;
+  --vscode-editor-findMatchHighlightBackground: rgba(217, 119, 87, 0.3) !important;
+
   --card: #22201e !important;
   --color-card: #22201e !important;
   --card-foreground: #edeae5 !important;
@@ -445,4 +466,53 @@ body[data-agy-theme][data-newux-theme="onyx"].dark .surface-composer > .surface-
   background-color: #1f1e1d !important;
   border: 1px solid #322f2b !important;
 }
+
+/* ════════════════════════════════════════════════════════════
+   12. 交互细节与高频失真修复 (Auditor Patches)
+   ════════════════════════════════════════════════════════════ */
+/* 修复语音输入按钮在暗底上呈现死黑字的问题（对比度 1.05:1 隐形 Bug） */
+[data-testid="voice-start-button"],
+button[aria-label*="voice" i],
+button[aria-label*="Voice" i] {
+  color: var(--foreground) !important;
+}
+
+[data-testid="voice-start-button"]:hover,
+button[aria-label*="voice" i]:hover,
+button[aria-label*="Voice" i]:hover {
+  color: var(--primary) !important;
+}
+
+/* 下拉菜单、模型列表项与浮动项悬停态高光 */
+.agy-overlay-item:hover,
+.agy-overlay-item[data-hovered="true"],
+.agy-overlay-item[data-highlighted="true"],
+[role="menuitem"]:hover,
+[role="option"]:hover {
+  background-color: var(--claude-accent-subtle, rgba(217, 119, 87, 0.15)) !important;
+  color: var(--claude-accent, #d97757) !important;
+}
+
+/* 顶部导航与新建对话按钮 selector 增强 */
+[data-testid="new-conversation-button"],
+[data-testid="app-icon-new-conversation-button"] {
+  color: var(--foreground) !important;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+[data-testid="new-conversation-button"]:hover,
+[data-testid="app-icon-new-conversation-button"]:hover {
+  color: var(--primary) !important;
+}
+
+[data-testid="pane-titlebar-toolbar"] {
+  border-bottom: 1px solid #282623 !important;
+}
+
+/* 作曲区未带 onyx 主题时的通用暖色兜底 */
+.surface-composer,
+.surface-composer > .surface-composer-card {
+  background-color: var(--onyx-raised, #22201e) !important;
+}
+
 

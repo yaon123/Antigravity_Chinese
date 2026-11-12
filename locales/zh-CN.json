@@ -270,7 +270,7 @@
     "Run command": "运行命令",
     "Run in background": "放入后台运行",
     "Allow": "允许",
-    "Allow Once": "仅本次允许",
+    "Allow Once": "允许本次",
     "Always Allow": "始终允许",
     "Deny": "拒绝",
     "Approve": "批准",
@@ -373,7 +373,7 @@
     "Configure allowed and denied URLs for browser actuation.": "配置浏览器操作允许与禁止的 URL。",
     "Voice Mode": "语音模式",
     "Voice mode": "语音模式",
-    "Voice": "语音",
+    "Voice": "语音输入",
     "Voice engine": "语音引擎",
     "Whatever the voice-engine-addr flag serves you.": "由 voice-engine-addr 参数提供。",
     "The voice used in Voice mode. Powered by Gemini Live.": "语音模式使用的音色，由 Gemini Live 提供支持。",
@@ -442,67 +442,323 @@
     "Change...": "更改...",
     "Search…": "搜索…",
     "Loading…": "加载中…",
-    "Ask anything...": "问任何问题..."
+    "Ask anything...": "问任何问题...",
+    "Model": "模型",
+    "Switch model": "切换模型",
+    "Switch Model": "切换模型",
+    "Reasoning": "深度推理",
+    "Fast": "快速模式",
+    "Context window": "上下文窗口",
+    "Context Window": "上下文窗口",
+    "Max tokens": "最大 Token 限制",
+    "Max Tokens": "最大 Token 限制",
+    "Temperature": "采样温度",
+    "High reasoning": "高深度推理",
+    "Medium reasoning": "中深度推理",
+    "Low reasoning": "低深度推理",
+    "Thinking Budget": "思考预算",
+    "Thinking budget": "思考预算",
+    "Extended Thinking": "扩展思考推演",
+    "Archive conversation": "归档对话",
+    "Pin conversation": "置顶对话",
+    "Unpin conversation": "取消置顶",
+    "Rename conversation": "重命名对话",
+    "Delete conversation": "删除对话",
+    "Share conversation": "分享对话",
+    "Export conversation": "导出对话",
+    "Add context": "添加上下文",
+    "Clear chat": "清空聊天",
+    "Always allow": "始终允许",
+    "Always allow for this project": "在此项目中始终允许",
+    "Allow once": "允许本次",
+    "Execute": "执行",
+    "View diff": "查看差异",
+    "Accept all": "全部接受",
+    "Reject all": "全部拒绝",
+    "Reject All": "全部拒绝",
+    "Collapse sidebar": "折叠侧边栏",
+    "Expand sidebar": "展开侧边栏",
+    "Type a command or search...": "输入命令或搜索...",
+    "No matching commands": "无匹配的命令",
+    "Start voice input": "开始语音输入",
+    "Stop voice input": "停止语音输入",
+    "Insert into terminal": "插入到终端",
+    "Run in terminal": "在终端中运行",
+    "Review changes": "审查更改",
+    "Discard": "放弃",
+    "Stage changes": "暂存更改",
+    "Unstage changes": "取消暂存",
+    "Commit": "提交",
+    "Commit message": "提交说明",
+    "Stash": "贮藏更改",
+    "Diff": "代码对比",
+    "Files": "文件列表",
+    "Terminal Output": "终端输出",
+    "Task Details": "任务详情",
+    "Subagent Details": "子智能体详情"
   },
   "partial": [
-    { "from": "Running", "to": "正在运行" },
-    { "from": "Completed in", "to": "完成耗时" },
-    { "from": "Exit code", "to": "退出码" },
-    { "from": "Failed to", "to": "操作失败：" },
-    { "from": "Searching", "to": "正在搜索" },
-    { "from": "No tasks running", "to": "当前无正在运行的后台任务" },
-    { "from": "No subagents active", "to": "当前无活跃子智能体" },
-    { "from": "No files changed", "to": "暂无变更文件" },
-    { "from": "tokens (", "to": "个 Token（" }
+    {
+      "from": "Running",
+      "to": "正在运行"
+    },
+    {
+      "from": "Completed in",
+      "to": "完成耗时"
+    },
+    {
+      "from": "Exit code",
+      "to": "退出码"
+    },
+    {
+      "from": "Failed to",
+      "to": "操作失败："
+    },
+    {
+      "from": "Searching",
+      "to": "正在搜索"
+    },
+    {
+      "from": "No tasks running",
+      "to": "当前无正在运行的后台任务"
+    },
+    {
+      "from": "No subagents active",
+      "to": "当前无活跃子智能体"
+    },
+    {
+      "from": "No files changed",
+      "to": "暂无变更文件"
+    },
+    {
+      "from": "tokens (",
+      "to": "个 Token（"
+    }
   ],
   "patterns": [
-    { "re": "^Worked for (.+)$", "to": "已工作 $1" },
-    { "re": "^Thought for (.+)$", "to": "思考用时 $1" },
-    { "re": "^Thinking for (.+)$", "to": "思考用时 $1" },
-    { "re": "^Completed in (.+)$", "to": "完成耗时 $1" },
-    { "re": "^Exit code (\\d+)$", "to": "退出码 $1" },
-    { "re": "^Running (.+)$", "to": "正在运行 $1" },
-    { "re": "^Searching (.+)$", "to": "正在搜索 $1" },
-    { "re": "^Reading (.+)$", "to": "正在读取 $1" },
-    { "re": "^Editing (.+)$", "to": "正在编辑 $1" },
-    { "re": "^Writing (.+)$", "to": "正在写入 $1" },
-    { "re": "^Calling (.+)$", "to": "正在调用 $1" },
-    { "re": "^Using (.+)$", "to": "正在使用 $1" },
-    { "re": "^Loaded (.+)$", "to": "已加载 $1" },
-    { "re": "^Failed to (.+)$", "to": "操作失败：$1" },
-    { "re": "^(\\d+) files? changed$", "to": "$1 个文件变更" },
-    { "re": "^(\\d+) files? changed,? \\+(\\d+) -(\\d+)$", "to": "$1 个文件变更 +$2 -$3" },
-    { "re": "^(\\d+) files? changed,? \\+(\\d+)$", "to": "$1 个文件变更 +$2" },
-    { "re": "^Passed (\\d+) of (\\d+) checks?$", "to": "通过 $1/$2 项检查" },
-    { "re": "^Passed (\\d+) checks?$", "to": "通过 $1 项检查" },
-    { "re": "^(\\d+) checks? passed$", "to": "通过 $1 项检查" },
-    { "re": "^(\\d+) checks? failed$", "to": "$1 项检查失败" },
-    { "re": "^Failed (\\d+) checks?$", "to": "$1 项检查失败" },
-    { "re": "^(\\d+) checks?$", "to": "$1 项检查" },
-    { "re": "^Show (\\d+) breakdowns?$", "to": "显示 $1 项明细" },
-    { "re": "^(\\d+) breakdowns?$", "to": "$1 项明细" },
-    { "re": "^(\\d+) tokens?$", "to": "$1 个 Token" },
-    { "re": "^(\\d[\\d,]*) tokens \\(([\\d.]+)%\\)$", "to": "$1 个 Token（$2%）" },
-    { "re": "^(\\d+) results?$", "to": "$1 个结果" },
-    { "re": "^(\\d+) items?$", "to": "$1 项" },
-    { "re": "^(\\d+) selected$", "to": "已选择 $1 项" },
-    { "re": "^(\\d+) warnings?$", "to": "$1 个警告" },
-    { "re": "^(\\d+) errors?$", "to": "$1 个错误" },
-    { "re": "^(\\d+) changes$", "to": "$1 处更改" },
-    { "re": "^(\\d+) files?$", "to": "$1 个文件" },
-    { "re": "^(\\d+) of (\\d+) files?$", "to": "$1/$2 个文件" },
-    { "re": "^(\\d+) lines?$", "to": "$1 行" },
-    { "re": "^(\\d+) commands?$", "to": "$1 条命令" },
-    { "re": "^(\\d+) tools?$", "to": "$1 个工具" },
-    { "re": "^(\\d+) steps?$", "to": "$1 个步骤" },
-    { "re": "^(\\d+) messages?$", "to": "$1 条消息" },
-    { "re": "^(\\d+) conversations?$", "to": "$1 个对话" },
-    { "re": "^(\\d+) projects?$", "to": "$1 个项目" },
-    { "re": "^Showing (\\d+) of (\\d+)$", "to": "显示 $1 / 共 $2 项" },
-    { "re": "^Show (\\d+) more$", "to": "再显示 $1 项" },
-    { "re": "^and (\\d+) more$", "to": "以及另外 $1 项" },
-    { "re": "^Signed in as (.+)$", "to": "已登录为 $1" },
-    { "re": "^Send feedback as (.+)$", "to": "以 $1 身份发送反馈" },
-    { "re": "^Showing (\\d+) of (\\d+) results?$", "to": "显示 $1 / 共 $2 条结果" }
+    {
+      "re": "^Tokens:?\\s*(.+)$",
+      "to": "Token用量: "
+    },
+    {
+      "re": "^Model:?\\s*(.+)$",
+      "to": "模型: "
+    },
+    {
+      "re": "^Status:?\\s*(.+)$",
+      "to": "状态: "
+    },
+    {
+      "re": "^Exit code:?\\s*(\\d+)$",
+      "to": "退出码 "
+    },
+    {
+      "re": "^Completed in:?\\s*(.+)$",
+      "to": "完成耗时 "
+    },
+    {
+      "re": "^Worked for:?\\s*(.+)$",
+      "to": "已工作 "
+    },
+    {
+      "re": "^Thinking for:?\\s*(.+)$",
+      "to": "思考用时 "
+    },
+    {
+      "re": "^Thought for:?\\s*(.+)$",
+      "to": "思考用时 "
+    },
+    {
+      "re": "^Worked for (.+)$",
+      "to": "已工作 $1"
+    },
+    {
+      "re": "^Thought for (.+)$",
+      "to": "思考用时 $1"
+    },
+    {
+      "re": "^Thinking for (.+)$",
+      "to": "思考用时 $1"
+    },
+    {
+      "re": "^Completed in (.+)$",
+      "to": "完成耗时 $1"
+    },
+    {
+      "re": "^Exit code (\\d+)$",
+      "to": "退出码 $1"
+    },
+    {
+      "re": "^Running (.+)$",
+      "to": "正在运行 $1"
+    },
+    {
+      "re": "^Searching (.+)$",
+      "to": "正在搜索 $1"
+    },
+    {
+      "re": "^Reading (.+)$",
+      "to": "正在读取 $1"
+    },
+    {
+      "re": "^Editing (.+)$",
+      "to": "正在编辑 $1"
+    },
+    {
+      "re": "^Writing (.+)$",
+      "to": "正在写入 $1"
+    },
+    {
+      "re": "^Calling (.+)$",
+      "to": "正在调用 $1"
+    },
+    {
+      "re": "^Using (.+)$",
+      "to": "正在使用 $1"
+    },
+    {
+      "re": "^Loaded (.+)$",
+      "to": "已加载 $1"
+    },
+    {
+      "re": "^Failed to (.+)$",
+      "to": "操作失败：$1"
+    },
+    {
+      "re": "^(\\d+) files? changed$",
+      "to": "$1 个文件变更"
+    },
+    {
+      "re": "^(\\d+) files? changed,? \\+(\\d+) -(\\d+)$",
+      "to": "$1 个文件变更 +$2 -$3"
+    },
+    {
+      "re": "^(\\d+) files? changed,? \\+(\\d+)$",
+      "to": "$1 个文件变更 +$2"
+    },
+    {
+      "re": "^Passed (\\d+) of (\\d+) checks?$",
+      "to": "通过 $1/$2 项检查"
+    },
+    {
+      "re": "^Passed (\\d+) checks?$",
+      "to": "通过 $1 项检查"
+    },
+    {
+      "re": "^(\\d+) checks? passed$",
+      "to": "通过 $1 项检查"
+    },
+    {
+      "re": "^(\\d+) checks? failed$",
+      "to": "$1 项检查失败"
+    },
+    {
+      "re": "^Failed (\\d+) checks?$",
+      "to": "$1 项检查失败"
+    },
+    {
+      "re": "^(\\d+) checks?$",
+      "to": "$1 项检查"
+    },
+    {
+      "re": "^Show (\\d+) breakdowns?$",
+      "to": "显示 $1 项明细"
+    },
+    {
+      "re": "^(\\d+) breakdowns?$",
+      "to": "$1 项明细"
+    },
+    {
+      "re": "^(\\d+) tokens?$",
+      "to": "$1 个 Token"
+    },
+    {
+      "re": "^(\\d[\\d,]*) tokens \\(([\\d.]+)%\\)$",
+      "to": "$1 个 Token（$2%）"
+    },
+    {
+      "re": "^(\\d+) results?$",
+      "to": "$1 个结果"
+    },
+    {
+      "re": "^(\\d+) items?$",
+      "to": "$1 项"
+    },
+    {
+      "re": "^(\\d+) selected$",
+      "to": "已选择 $1 项"
+    },
+    {
+      "re": "^(\\d+) warnings?$",
+      "to": "$1 个警告"
+    },
+    {
+      "re": "^(\\d+) errors?$",
+      "to": "$1 个错误"
+    },
+    {
+      "re": "^(\\d+) changes$",
+      "to": "$1 处更改"
+    },
+    {
+      "re": "^(\\d+) files?$",
+      "to": "$1 个文件"
+    },
+    {
+      "re": "^(\\d+) of (\\d+) files?$",
+      "to": "$1/$2 个文件"
+    },
+    {
+      "re": "^(\\d+) lines?$",
+      "to": "$1 行"
+    },
+    {
+      "re": "^(\\d+) commands?$",
+      "to": "$1 条命令"
+    },
+    {
+      "re": "^(\\d+) tools?$",
+      "to": "$1 个工具"
+    },
+    {
+      "re": "^(\\d+) steps?$",
+      "to": "$1 个步骤"
+    },
+    {
+      "re": "^(\\d+) messages?$",
+      "to": "$1 条消息"
+    },
+    {
+      "re": "^(\\d+) conversations?$",
+      "to": "$1 个对话"
+    },
+    {
+      "re": "^(\\d+) projects?$",
+      "to": "$1 个项目"
+    },
+    {
+      "re": "^Showing (\\d+) of (\\d+)$",
+      "to": "显示 $1 / 共 $2 项"
+    },
+    {
+      "re": "^Show (\\d+) more$",
+      "to": "再显示 $1 项"
+    },
+    {
+      "re": "^and (\\d+) more$",
+      "to": "以及另外 $1 项"
+    },
+    {
+      "re": "^Signed in as (.+)$",
+      "to": "已登录为 $1"
+    },
+    {
+      "re": "^Send feedback as (.+)$",
+      "to": "以 $1 身份发送反馈"
+    },
+    {
+      "re": "^Showing (\\d+) of (\\d+) results?$",
+      "to": "显示 $1 / 共 $2 条结果"
+    }
   ]
 }

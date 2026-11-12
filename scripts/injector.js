@@ -42,6 +42,12 @@
   var rawDict = window.__CLAUDE_TRANSLATIONS__;
   var dict = (rawDict && typeof rawDict === 'object') ? rawDict : {};
   var exact = (dict.exact && typeof dict.exact === 'object') ? dict.exact : {};
+  var exactLower = {};
+  for (var ek in exact) {
+    if (Object.prototype.hasOwnProperty.call(exact, ek)) {
+      exactLower[ek.toLowerCase()] = exact[ek];
+    }
+  }
 
   var partialList = [];
   if (Object.prototype.toString.call(dict.partial) === '[object Array]') {
@@ -86,33 +92,27 @@
     IFRAME: 1, OBJECT: 1, EMBED: 1, TEXTAREA: 1, INPUT: 1
   };
 
-  // 硬保护：代码 / 编辑器 / 聊天正文渲染器 —— 文本节点一律不动
-  // 注意：whitespace-pre-wrap / select-text 是 Tailwind 通用工具类，聊天正文和
-  // 设置页描述都会用到，不能无条件当正文保护，所以单独放到 SOFT_TEXT_ONLY。
+  // 硬保护：仅针对纯代码文本行、终端行与编辑器画布 —— 文本节点一律不动
+  // 注意：不再把整个 diff 或 code 卡片容器作为硬保护，避免其头部的复制、执行等按钮被误杀
   var HARD_SELECTOR = [
     'pre', 'code', 'kbd', 'samp',
-    '.markdown',
-    '[class*="markdown"]',
     '[class*="hljs"]',
-    '[class*="monaco"]',
-    '[class*="xterm"]',
-    '[class*="CodeMirror"]',
-    '.terminal',
-    '[data-testid*="code"]',
-    '[data-testid*="diff"]',
-    '[data-testid*="editor"]',
-    '[data-testid*="terminal"]',
-    '[data-testid*="sidecar"]',
+    '.monaco-editor .view-lines',
+    '.xterm-rows',
+    '[class*="CodeMirror-lines"]',
     '[data-claude-i18n-ignore]'
   ].join(',');
 
-  // 只在「非弹窗/设置界面」里才当作正文保护的通用类
+  // 只在「非弹窗/设置界面/非外围导航」里才当作正文保护的通用类
   var SOFT_TEXT_ONLY_SELECTOR = '[class*="whitespace-pre-wrap"], [class*="select-text"]';
 
-  // 弹窗 / 设置面板内部的文字属于界面骨架，必须翻译
+  // 弹窗 / 设置面板 / 侧栏 / 菜单内部的文字属于界面骨架，必须翻译
   var DIALOG_SELECTOR = [
     '.settings-modal-container', '.agy-dialog', '[data-testid="settings-sidebar"]',
-    '[data-testid*="settings"]', '[role="dialog"]'
+    '[data-testid*="settings"]', '[role="dialog"]', '[role="menu"]', '[role="listbox"]',
+    '[role="combobox"]', '.agy-menu', '.agy-overlay', '[class*="popover"]', '[class*="dropdown"]',
+    '[class*="sidebar"]', '[class*="toolbar"]', '[class*="header"]', '[class*="footer"]',
+    'nav', 'aside', 'header', 'footer', 'button', '[role="button"]'
   ].join(',');
 
   function isHardProtected(el) {
@@ -185,12 +185,11 @@
   }
 
   // 对话/消息容器（软保护）里 patterns 的闸门：
-  // 只放行极短的「步骤摘要」样式文案（如 "Worked for 5m"、"3 files changed"、
-  // "Passed 3 checks"），带标点或超过 5 个词的长句（Agent 正文）一律不碰。
+  // 放行步骤摘要与状态文案（如 "Worked for 5m"、"Thought for: 12s"、"3 files changed" 等），
+  // 仅拦截多行换行长文，不再根据小数点/冒号/括号一票否决
   function canApplyPatternsInSoft(core) {
-    if (core.length > 48) return false;
-    if (core.split(/\s+/).length > 5) return false;
-    if (/[.,;:!?()\[\]{}、。，；：！？]/.test(core)) return false;
+    if (core.length > 80) return false;
+    if (core.indexOf('\n') !== -1 || core.indexOf('\r') !== -1) return false;
     return true;
   }
 
@@ -220,6 +219,25 @@
     if (hasOwn.call(exact, core)) {
       var hit = exact[core];
       if (typeof hit === 'string' && hit !== core) return lead + hit + trail;
+    }
+
+    // 3.1b 大小写模糊精确匹配 (如 "New conversation" -> "新建对话")
+    var lowerCore = core.toLowerCase();
+    if (hasOwn.call(exactLower, lowerCore)) {
+      var hitLower = exactLower[lowerCore];
+      if (typeof hitLower === 'string' && hitLower !== core) return lead + hitLower + trail;
+    }
+
+    // 3.1c 尾部冒号自动匹配 (如 "Model:" -> "模型：")
+    if (core.endsWith(':') || core.endsWith('：')) {
+      var withoutColon = core.slice(0, -1).trim();
+      if (hasOwn.call(exact, withoutColon)) {
+        return lead + exact[withoutColon] + '：' + trail;
+      }
+      var lowerWithout = withoutColon.toLowerCase();
+      if (hasOwn.call(exactLower, lowerWithout)) {
+        return lead + exactLower[lowerWithout] + '：' + trail;
+      }
     }
 
     // 3.2 已含中文 => 跳过（幂等）
