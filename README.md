@@ -3,7 +3,7 @@
 给 **Antigravity**（Google 的 Agentic 桌面客户端，Electron 应用）套上 Claude Code 的暖暗色外观，
 并把界面汉化成中文。
 
-- 客户端实测版本：**Antigravity 2.29.0**（Electron + React + Tailwind v4）
+- 客户端实测版本：**Antigravity 2.31.2**（Electron + React + Tailwind v4）
 - 皮肤走 **设计令牌优先**（CSS 变量）+ 少量真实组件钩子，应用小版本更新一般不会失效
 - 汉化是**运行时注入**：改词典、改样式都不用重新打包，窗口内 `Ctrl+R` 即热更新
 
