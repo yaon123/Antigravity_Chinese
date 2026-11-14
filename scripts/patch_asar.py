@@ -456,6 +456,23 @@ def cmd_install(resources, project):
             return fail("打补丁后的 main.js 未通过 node 语法检查，已中止（不会改动安装目录）")
         main_path.write_text(patched_js, encoding="utf-8", newline="\n")
 
+        # 禁用后台静默自动下载与退出时强制静默更新（从源头阻止反复被覆盖）
+        updater_path = extract_dir / "dist" / "updater.js"
+        if updater_path.exists():
+            u_js = updater_path.read_text(encoding="utf-8", errors="replace")
+            if "autoDownload = true;" in u_js:
+                u_js = u_js.replace(
+                    "electron_updater_1.autoUpdater.autoDownload = true;",
+                    "electron_updater_1.autoUpdater.autoDownload = false; // [ClaudeTheme] disabled silent auto-download"
+                )
+                u_js = u_js.replace(
+                    "electron_updater_1.autoUpdater.autoInstallOnAppQuit = electron_1.app.isPackaged;",
+                    "electron_updater_1.autoUpdater.autoInstallOnAppQuit = false; // [ClaudeTheme] disabled silent auto-install"
+                )
+                if node_syntax_check(u_js, tmpdir):
+                    updater_path.write_text(u_js, encoding="utf-8", newline="\n")
+                    log("  已禁用 updater 静默后台自动更新（彻底从根源防止新版再次覆盖补丁）")
+
         log("=== 4/6 重新打包（保持原版 unpacked 布局）===")
         specs = compute_unpack_specs(json.loads(json.dumps(read_asar(asar)[1])))
         pack_args = ["pack", str(extract_dir), str(tmpdir / "app.asar")]
